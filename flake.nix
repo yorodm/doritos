@@ -1,15 +1,19 @@
 {
-  description = "A very basic flake";
+  description = "My shells and templates for development";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs }: {
-
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-
-    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-
-  };
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        defaultShell =  import ./shells/nix-dev.nix {inherit pkgs; };
+      in
+      {
+        devshells.default = defaultShell;
+      }
+    );
 }
