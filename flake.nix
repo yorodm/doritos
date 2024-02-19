@@ -13,7 +13,8 @@
         defaultShell =  import ./shells/nix-dev.nix {inherit pkgs; };
       in
       {
-        devshells.default = defaultShell;
+        devShells.default = defaultShell;
+        devShells.python-dev = import ./shells/python-dev.nix {inherit pkgs;};
       }
     );
 }
